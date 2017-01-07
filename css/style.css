@@ -27,21 +27,26 @@ html, body {
 
 .filter_menu {
   height: 100%;
-  width: 4%;
+  width: 25%;
   display: block;
   background-color: black;
   height: 100%;
   position: fixed;
   z-index: 1;
   top: 0;
-  left: 0;
+  transform: translateX(-85%);
+  /*left: -100px;*/
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;
 }
 
 .filter_menu.open {
-  width: 25%;
+  transform: translateX(0);
+}
+
+.location_list {
+  color: white;
 }
 
 .header {
@@ -59,7 +64,8 @@ html, body {
   width: 40px;
   height: 35px;
   position: relative;
-  margin: auto;
+  text-align: right;
+  margin: 0 5px 0 auto;
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
   -o-transform: rotate(0deg);

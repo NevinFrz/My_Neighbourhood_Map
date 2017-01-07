@@ -1,4 +1,3 @@
-
 var locations = [
   {title: 'Central Park', location: {lat: 40.7828687, lng:-73.9675438}},
   {title: 'Empire State Building', location: {lat: 40.7484444, lng: -73.9878441}},
@@ -11,62 +10,95 @@ var locations = [
 ];
 
 
-$(document).ready(function(){
-	$('#nav-icon1').click(function(){
-		$(this).toggleClass('open');
-    $('.filter_menu').toggleClass('open');
-	});
-});
 
-// var SearchViewModel = function () {
-//   this.toggleHamburger = function () {
-//     console.log("hoihoi");
-//     document.getElementById("#nav-icon1").classList.toggle('open');
-//     document.getElementById(".filter_menu").classList.toggle('open');
-//   }
-// }
+
+// $(document).ready(function(){
+// 	$('#nav-icon1').click(function(){
+// 		$(this).toggleClass('open');
+//     $('.filter_menu').toggleClass('open');
+// 	});
+// }); 
+var ViewModel = function () {
+  var self = this;
+  self.toggleHamburger = function () {
+    $('#nav-icon1').toggleClass('open');
+    $('.filter_menu').toggleClass('open');
+  }
+
+  // function initMarkers() {
+    locations.forEach(function(location) {
+      marker = new google.maps.Marker({
+        title: location.title,
+        position: location.location,
+        map: map,
+      });
+      marker.addListener('click', function() {
+      initInfoWindow(this, viewInfoWindow);
+      });
+      markers.push(marker);
+      location.marker = marker;
+    });
+    var bounds = new google.maps.LatLngBounds();
+    // Extend the boundaries of the map for each marker and display the marker
+    markers.forEach(function (marker) {
+      bounds.extend(marker.position);
+    });
+    // for (var i = 0; i < markers.length; i++) {
+    //   // markers[i].setMap(map);
+    //   bounds.extend(markers[i].position);
+    // }
+    map.fitBounds(bounds);
+  // };
+  this.openMarker = function () {
+    initInfoWindow(this.marker, viewInfoWindow);
+  }
+  self.places = ko.observableArray(locations);
+  self.title = ko.observable('');
+  self.filterTerm = ko.observable('');
+  // var term = self.filterTerm();
+  self.filterFuntion = ko.computed(function () {
+    return filterList = ko.utils.arrayFilter(self.places(), function (location) {
+      if(location.title.toLowerCase().indexOf(self.filterTerm()) >= 0) {
+        if (location.marker) {
+            location.marker.setVisible(true);
+        }
+        return true;
+      }
+      else{
+        location.marker.setVisible(false);
+      }
+    });
+  });
+};
 
 var map;
 var viewInfoWindow;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7432166, lng: -73.9936478},
-      zoom: 13,
+      zoom: 12,
       disableDefaultUI: true
   });
-  // ko.applyBindings(new SearchViewModel());
+  ko.applyBindings(new ViewModel());
   viewInfoWindow = new google.maps.InfoWindow();
-  initMarkers();
+  // initMarkers();
 };
 
 
 var marker;
 var markers = [];
 
-function initMarkers() {
-  locations.forEach(function(location) {
-    marker = new google.maps.Marker({
-      title: location.title,
-      position: location.location,
-      map: map,
-    });
-    marker.addListener('click', function() {
-    initInfoWindow(this, viewInfoWindow);
-    });
-    markers.push(marker);
-  });
-  showListings();
-};
 
-function showListings() {
-  var bounds = new google.maps.LatLngBounds();
-  // Extend the boundaries of the map for each marker and display the marker
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
-    bounds.extend(markers[i].position);
-  }
-  map.fitBounds(bounds);
-}
+
+// function showListings() {
+//   var bounds = new google.maps.LatLngBounds();
+//   // Extend the boundaries of the map for each marker and display the marker
+//   for (var i = 0; i < markers.length; i++) {
+//     markers[i].setMap(map);
+//     bounds.extend(markers[i].position);
+//   }
+//   map.fitBounds(bounds);
+// }
 
 function initInfoWindow(marker, infowindow) {
   if (infowindow.marker != marker) {
@@ -96,3 +128,4 @@ function initInfoWindow(marker, infowindow) {
       }
     });
 }
+ko.applyBindings(new ViewModel());

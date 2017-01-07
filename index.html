@@ -12,10 +12,16 @@
       <header class="header">Major Landmarks of New York</header>
     </nav>
     <div class="filter_menu">
-      <div id="nav-icon1">
+      <div id="nav-icon1" data-bind="click: toggleHamburger">
         <span></span>
         <span></span>
         <span></span>
+      </div>
+      <div class="">
+        <input type="text" name="filter" class="filter" placeholder="Type here to Filter" data-bind="textInput: filterTerm">
+        <ul class="list" data-bind="foreach: filterFuntion">
+            <li class="location_list" data-bind="text:title, click:$parent.openMarker"></li>
+        </ul>
       </div>
     </div>
 
@@ -23,6 +29,7 @@
     <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
     <script src="js/knockout-3.4.1.js"></script>
     <script src="js/app.js"></script>
+
     <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCa8XsmeBGiFv5yCCbxjW2dr-ftPr8I32w&v=3&callback=initMap" onerror="erroralert()"></script>
   </body>
 </html>
