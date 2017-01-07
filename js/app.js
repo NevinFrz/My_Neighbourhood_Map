@@ -1,15 +1,18 @@
 var locations = [
-  {title: 'Central Park', location: {lat: 40.7828687, lng:-73.9675438}},
-  {title: 'Empire State Building', location: {lat: 40.7484444, lng: -73.9878441}},
-  {title: 'Statue of Liberty', location: {lat: 40.689251, lng: -74.044506}},
-  {title: 'Metropolitan Museum of Art', location: {lat: 40.7794406, lng: -73.9654327}},
-  {title: 'Madame Tussauds New York', location: {lat: 40.7564309, lng: -73.9910225}},
-  {title: 'Rockefeller Center', location: {lat: 40.7587442, lng: -73.9808623}},
-  {title: 'One World Trade Center', location: {lat: 40.7129987, lng: -74.0153496}},
-  {title: 'Chrysler Building', location: {lat: 40.7516248, lng: -73.9776907}},
+  {title: 'Central Park', location: {lat: 40.7828687, lng:-73.9675438}, type: 'park'},
+  {title: 'Empire State Building', location: {lat: 40.7484444, lng: -73.9878441}, type: 'wonder'},
+  {title: 'Statue of Liberty', location: {lat: 40.689251, lng: -74.044506}, type: 'museum'},
+  {title: 'Metropolitan Museum of Art', location: {lat: 40.7794406, lng: -73.9654327}, type: 'museum'},
+  {title: 'Madame Tussauds New York', location: {lat: 40.7564309, lng: -73.9910225}, type: 'museum'},
+  {title: 'Rockefeller Center', location: {lat: 40.7587442, lng: -73.9808623}, type: 'wonder'},
+  {title: 'One World Trade Center', location: {lat: 40.7129987, lng: -74.0153496}, type: 'wonder'},
+  {title: 'Chrysler Building', location: {lat: 40.7516248, lng: -73.9776907}, type: 'wonder'},
 ];
 
-
+// var icons = {
+//   park: {icons: 'icon/park.png'},
+//   museum: {icons: 'icon/museum.png'}
+// };
 
 
 // $(document).ready(function(){
@@ -17,7 +20,7 @@ var locations = [
 // 		$(this).toggleClass('open');
 //     $('.filter_menu').toggleClass('open');
 // 	});
-// }); 
+// });
 var ViewModel = function () {
   var self = this;
   self.toggleHamburger = function () {
@@ -25,12 +28,19 @@ var ViewModel = function () {
     $('.filter_menu').toggleClass('open');
   }
 
+  var icons = {
+    park: {icon: 'icon/park.png'},
+    museum: {icon: 'icon/museum.png'},
+    wonder: {icon: 'icon/wonder.png'}
+  };
+
   // function initMarkers() {
     locations.forEach(function(location) {
       marker = new google.maps.Marker({
         title: location.title,
         position: location.location,
         map: map,
+        icon: icons[location.type].icon
       });
       marker.addListener('click', function() {
       initInfoWindow(this, viewInfoWindow);

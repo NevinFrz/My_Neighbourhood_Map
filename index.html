@@ -17,8 +17,10 @@
         <span></span>
         <span></span>
       </div>
-      <div class="">
-        <input type="text" name="filter" class="filter" placeholder="Type here to Filter" data-bind="textInput: filterTerm">
+      <div>
+        <div class="filter">
+          <input type="text" name="filter" placeholder="Type Here to Filter Places" data-bind="textInput: filterTerm">
+        </div>
         <ul class="list" data-bind="foreach: filterFuntion">
             <li class="location_list" data-bind="text:title, click:$parent.openMarker"></li>
         </ul>

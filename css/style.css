@@ -45,8 +45,45 @@ html, body {
   transform: translateX(0);
 }
 
+.filter {
+  padding-top: 20px;
+  padding-right: 10px;
+}
+
+input[type="text"] {
+  display: block;
+  margin: 0;
+  /*width: 100%;*/
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 18px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+}
+input[type="text"]:focus {
+  outline: none;
+}
+
+.filter input[type="text"] {
+  text-align: center;
+  margin: 0 auto;
+  padding: 10px;
+  border: solid 5px #c9c9c9;
+  transition: border 0.3s;
+}
+.filter input[type="text"]:focus,
+.filter input[type="text"].focus {
+  text-align: center;
+  border: solid 5px #969696;
+}
+
+.list {
+  list-style: none;
+}
 .location_list {
   color: white;
+  padding-top: 20px;
 }
 
 .header {
