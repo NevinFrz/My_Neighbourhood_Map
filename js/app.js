@@ -36,6 +36,7 @@ var ViewModel = function () {
         title: location.title,
         position: location.location,
         map: map,
+        animation: google.maps.Animation.DROP,
         icon: icons[location.type].icon
       });
       //Event handler function listening for marker clicks and opens up InfoWindow
