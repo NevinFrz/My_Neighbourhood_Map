@@ -62,9 +62,7 @@ var ViewModel = function () {
     //Filtering location based on user input recieved from view
     return filterList = ko.utils.arrayFilter(self.places(), function (location) {
       if(location.title.toLowerCase().indexOf(self.filterTerm()) >= 0) {
-        if (location.marker) {
-            location.marker.setVisible(true);
-        }
+        location.marker.setVisible(true);
         return true;
       }
       else{
