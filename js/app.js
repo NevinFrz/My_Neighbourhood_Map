@@ -1,3 +1,5 @@
+
+//The data model containing info such as name, lat long values and type of each place.
 var locations = [
   {title: 'Central Park', location: {lat: 40.7828687, lng:-73.9675438}, type: 'park'},
   {title: 'Empire State Building', location: {lat: 40.7484444, lng: -73.9878441}, type: 'wonder'},
@@ -10,32 +12,25 @@ var locations = [
   {title: 'Washington Square Park', location: {lat: 40.730888, lng:-73.997471}, type: 'park'},
   {title: 'The High Line', location: {lat: 40.747976, lng:-74.004722}, type: 'park'}
 ];
-// var icons = {
-//   park: {icons: 'icon/park.png'},
-//   museum: {icons: 'icon/museum.png'}
-// };
 
 
-// $(document).ready(function(){
-// 	$('#nav-icon1').click(function(){
-// 		$(this).toggleClass('open');
-//     $('.filter_menu').toggleClass('open');
-// 	});
-// });
+var marker;
+var markers = [];
+//ViewModel of my app
 var ViewModel = function () {
   var self = this;
+  //Function for opening hamburger menu
   self.toggleHamburger = function () {
     $('#nav-icon1').toggleClass('open');
     $('.filter_menu').toggleClass('open');
   }
-
+  //Custom icons for markers
   var icons = {
     park: {icon: 'icon/park.png'},
     museum: {icon: 'icon/museum.png'},
     wonder: {icon: 'icon/wonder.png'}
   };
-
-  // function initMarkers() {
+    //Foreach iterating over all the locations and creating markers for each location
     locations.forEach(function(location) {
       marker = new google.maps.Marker({
         title: location.title,
@@ -43,31 +38,28 @@ var ViewModel = function () {
         map: map,
         icon: icons[location.type].icon
       });
+      //Event handler function listening for marker clicks and opens up InfoWindow
       marker.addListener('click', function() {
-      initInfoWindow(this, viewInfoWindow);
+        initInfoWindow(this, viewInfoWindow);
       });
       markers.push(marker);
       location.marker = marker;
     });
+    //Creating bound variable for setting bounds in google maps
     var bounds = new google.maps.LatLngBounds();
-    // Extend the boundaries of the map for each marker and display the marker
     markers.forEach(function (marker) {
       bounds.extend(marker.position);
     });
-    // for (var i = 0; i < markers.length; i++) {
-    //   // markers[i].setMap(map);
-    //   bounds.extend(markers[i].position);
-    // }
     map.fitBounds(bounds);
-  // };
-  this.openMarker = function () {
-    initInfoWindow(this.marker, viewInfoWindow);
-  }
+    this.openMarker = function () {
+      initInfoWindow(this.marker, viewInfoWindow);
+    }
+  //The filter Operation implementation
   self.places = ko.observableArray(locations);
   self.title = ko.observable('');
   self.filterTerm = ko.observable('');
-  // var term = self.filterTerm();
   self.filterFuntion = ko.computed(function () {
+    //Filtering location based on user input recieved from view
     return filterList = ko.utils.arrayFilter(self.places(), function (location) {
       if(location.title.toLowerCase().indexOf(self.filterTerm()) >= 0) {
         if (location.marker) {
@@ -84,6 +76,7 @@ var ViewModel = function () {
 
 var map;
 var viewInfoWindow;
+//Function called for initializing the Google maps
 function initMap() {
   var styles = [
   {
@@ -300,33 +293,20 @@ function initMap() {
     ]
   }
 ];
+//Creating new map variable
   map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7432166, lng: -73.9936478},
       zoom: 12,
       styles: styles,
       disableDefaultUI: true
   });
+  //Applying Bindings to ViewModel
   ko.applyBindings(new ViewModel());
+  //Initializing InfoWindow
   viewInfoWindow = new google.maps.InfoWindow();
-  // initMarkers();
 };
 
-
-var marker;
-var markers = [];
-
-
-
-// function showListings() {
-//   var bounds = new google.maps.LatLngBounds();
-//   // Extend the boundaries of the map for each marker and display the marker
-//   for (var i = 0; i < markers.length; i++) {
-//     markers[i].setMap(map);
-//     bounds.extend(markers[i].position);
-//   }
-//   map.fitBounds(bounds);
-// }
-
+//Function which creates the InfoWindow and its contents
 function initInfoWindow(marker, infowindow) {
   if (infowindow.marker != marker) {
       infowindow.marker = marker;
@@ -340,6 +320,7 @@ function initInfoWindow(marker, infowindow) {
     console.log(lng);
     var loc = lat +','+ lng;
     var url = 'https://api.foursquare.com/v2/venues/search?v=20161016&ll='+ loc +'&intent=checkin&client_id='+ clientID +'&client_secret='+ clientSecret;
+    ///Ajax method handling response recieved from fourSquare
     $.ajax({
       method: 'GET',
       url: url,
@@ -350,13 +331,14 @@ function initInfoWindow(marker, infowindow) {
         infowindow.setContent('<div><h2>'+ marker.title +'</h2><br><span class="infoDetails">Address:</span> '+ address+'<br><span class="infoDetails">City:</span> '+city+'</div>');
         infowindow.open(map, marker);
       },
+      //Error handler for ajax method
       error: function () {
         alert("ERROR!.Cannot Retrieve Data at this time");
       }
     });
 }
 ko.applyBindings(new ViewModel());
-
+//Error handler for Google maps API
 function errorAlert() {
   alert('Error lodading data from google maps. Check your connection');
 };
