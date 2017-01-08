@@ -2,7 +2,9 @@
   height: 100%;
   width: 100%;
 }
-
+* {
+  box-sizing: border-box;
+}
 
 html, body {
   height: 100%;
@@ -27,7 +29,7 @@ html, body {
 
 .filter_menu {
   height: 100%;
-  width: 25%;
+  width: 330px;
   display: block;
   background-color: black;
   height: 100%;
@@ -54,7 +56,7 @@ input[type="text"] {
   display: block;
   margin: 0;
   /*width: 100%;*/
-  text-align: center;
+  /*text-align: center;*/
   font-family: sans-serif;
   font-size: 18px;
   appearance: none;
@@ -66,15 +68,14 @@ input[type="text"]:focus {
 }
 
 .filter input[type="text"] {
-  text-align: center;
-  margin: 0 auto;
+  /*margin: 0 auto;*/
+  margin-left: 20px;
   padding: 10px;
   border: solid 5px #c9c9c9;
   transition: border 0.3s;
 }
 .filter input[type="text"]:focus,
 .filter input[type="text"].focus {
-  text-align: center;
   border: solid 5px #969696;
 }
 
@@ -83,16 +84,24 @@ input[type="text"]:focus {
 }
 .location_list {
   color: white;
-  padding-top: 20px;
+  margin-top: 20px;
+  font-size: 1.5;
+}
+.location_list:hover {
+  color: blue;
+  cursor: pointer;
 }
 
 .header {
-  padding: 10px;
-  font-family: sans-serif;
-  font-size: 36px;
+  /*padding: 10px;*/
+  font-family: monospace;
+  font-size: 3vw;
   text-align: center;
   color: #fff;
 }
+
+
+
 .infoDetails {
   font-weight: bold;
 }
@@ -164,4 +173,13 @@ input[type="text"]:focus {
   -moz-transform: rotate(-135deg);
   -o-transform: rotate(-135deg);
   transform: rotate(-135deg);
+}
+
+
+@media screen and (min-width: 320px) and (max-width: 770px) {
+  .header {
+    font-size: 5vmin;
+    padding-left: 35px;
+    padding-top: 10px;
+  }
 }
