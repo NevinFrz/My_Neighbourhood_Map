@@ -13,9 +13,13 @@ var locations = [
   {title: 'The High Line', location: {lat: 40.747976, lng:-74.004722}, type: 'park'}
 ];
 
+//Custom icons for markers
+var icons = {
+  park: {icon: 'icon/park.png'},
+  museum: {icon: 'icon/museum.png'},
+  wonder: {icon: 'icon/wonder.png'}
+};
 
-var marker;
-var markers = [];
 //ViewModel of my app
 var ViewModel = function () {
   var self = this;
@@ -24,34 +28,7 @@ var ViewModel = function () {
     $('#nav-icon1').toggleClass('open');
     $('.filter_menu').toggleClass('open');
   }
-  //Custom icons for markers
-  var icons = {
-    park: {icon: 'icon/park.png'},
-    museum: {icon: 'icon/museum.png'},
-    wonder: {icon: 'icon/wonder.png'}
-  };
-    //Foreach iterating over all the locations and creating markers for each location
-    locations.forEach(function(location) {
-      marker = new google.maps.Marker({
-        title: location.title,
-        position: location.location,
-        map: map,
-        animation: google.maps.Animation.DROP,
-        icon: icons[location.type].icon
-      });
-      //Event handler function listening for marker clicks and opens up InfoWindow
-      marker.addListener('click', function() {
-        initInfoWindow(this, viewInfoWindow);
-      });
-      markers.push(marker);
-      location.marker = marker;
-    });
-    //Creating bound variable for setting bounds in google maps
-    var bounds = new google.maps.LatLngBounds();
-    markers.forEach(function (marker) {
-      bounds.extend(marker.position);
-    });
-    map.fitBounds(bounds);
+
     this.openMarker = function () {
       initInfoWindow(this.marker, viewInfoWindow);
     }
@@ -62,10 +39,17 @@ var ViewModel = function () {
   self.filterFuntion = ko.computed(function () {
     //Filtering location based on user input recieved from view
     return filterList = ko.utils.arrayFilter(self.places(), function (location) {
+
       if(location.title.toLowerCase().indexOf(self.filterTerm()) >= 0) {
-        location.marker.setVisible(true);
         return true;
+        if (location.marker) {
+          return true;
+          location.marker.setVisible(true);
+
+        }
+
       }
+
       else{
         location.marker.setVisible(false);
       }
@@ -300,10 +284,43 @@ function initMap() {
       disableDefaultUI: true
   });
   //Applying Bindings to ViewModel
-  ko.applyBindings(new ViewModel());
+ //ko.applyBindings(new ViewModel());
+
   //Initializing InfoWindow
+  console.log('hello');
   viewInfoWindow = new google.maps.InfoWindow();
+  initMarker();
 };
+var marker;
+var markers = [];
+//Function used to create marker and to set the map bounds
+function initMarker() {
+  //Foreach iterating over all the locations and creating markers for each location
+  locations.forEach(function(location) {
+    marker = new google.maps.Marker({
+      title: location.title,
+      position: location.location,
+      map: map,
+      animation: google.maps.Animation.DROP,
+      icon: icons[location.type].icon
+    });
+    //Event handler function listening for marker clicks and opens up InfoWindow
+    marker.addListener('click', function() {
+      initInfoWindow(this, viewInfoWindow);
+    });
+    markers.push(marker);
+    location.marker = marker;
+  });
+  //Creating bound variable for setting bounds in google maps
+  var bounds = new google.maps.LatLngBounds();
+  markers.forEach(function (marker) {
+    bounds.extend(marker.position);
+  });
+  map.fitBounds(bounds);
+};
+
+
+
 
 //Function which creates the InfoWindow and its contents
 function initInfoWindow(marker, infowindow) {
@@ -336,8 +353,9 @@ function initInfoWindow(marker, infowindow) {
       }
     });
 }
-ko.applyBindings(new ViewModel());
+
 //Error handler for Google maps API
 function errorAlert() {
   alert('Error lodading data from google maps. Check your connection');
 };
+ko.applyBindings(new ViewModel());
