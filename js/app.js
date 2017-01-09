@@ -41,13 +41,10 @@ var ViewModel = function () {
     return filterList = ko.utils.arrayFilter(self.places(), function (location) {
 
       if(location.title.toLowerCase().indexOf(self.filterTerm()) >= 0) {
-        return true;
         if (location.marker) {
-          return true;
           location.marker.setVisible(true);
-
         }
-
+        return true;
       }
 
       else{
