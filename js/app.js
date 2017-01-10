@@ -2,13 +2,13 @@
 //The data model containing info such as name, lat long values and type of each place.
 var locations = [
   {title: 'Central Park', location: {lat: 40.7828687, lng:-73.9675438}, type: 'park'},
-  {title: 'Empire State Building', location: {lat: 40.7484444, lng: -73.9878441}, type: 'wonder'},
+  {title: 'Empire State Building', location: {lat: 40.748435, lng: -73.985662}, type: 'wonder'},
   {title: 'Statue of Liberty', location: {lat: 40.689251, lng: -74.044506}, type: 'museum'},
-  {title: 'Metropolitan Museum of Art', location: {lat: 40.7794406, lng: -73.9654327}, type: 'museum'},
-  {title: 'Madame Tussauds New York', location: {lat: 40.7564309, lng: -73.9910225}, type: 'museum'},
-  {title: 'Rockefeller Center', location: {lat: 40.7587442, lng: -73.9808623}, type: 'wonder'},
-  {title: 'One World Trade Center', location: {lat: 40.7129987, lng: -74.0153496}, type: 'wonder'},
-  {title: 'Chrysler Building', location: {lat: 40.7516248, lng: -73.9776907}, type: 'wonder'},
+  {title: 'Metropolitan Museum of Art', location: {lat: 40.779437, lng: -73.963262}, type: 'museum'},
+  {title: 'Madame Tussauds New York', location: {lat: 40.756411, lng: -73.988852}, type: 'museum'},
+  {title: 'Rockefeller Center', location: {lat: 40.758640, lng: -73.978640}, type: 'wonder'},
+  {title: 'One World Trade Center', location: {lat: 40.712892, lng: -74.012553}, type: 'wonder'},
+  {title: 'Chrysler Building', location: {lat: 40.751615, lng: -73.975508}, type: 'wonder'},
   {title: 'Washington Square Park', location: {lat: 40.730888, lng:-73.997471}, type: 'park'},
   {title: 'The High Line', location: {lat: 40.747976, lng:-74.004722}, type: 'park'}
 ];
@@ -31,10 +31,10 @@ var ViewModel = function () {
 
     this.openMarker = function () {
       initInfoWindow(this.marker, viewInfoWindow);
+      bounceMarker(this.marker);
     }
   //The filter Operation implementation
   self.places = ko.observableArray(locations);
-  self.title = ko.observable('');
   self.filterTerm = ko.observable('');
   self.filterFuntion = ko.computed(function () {
     //Filtering location based on user input recieved from view
@@ -284,7 +284,7 @@ function initMap() {
  //ko.applyBindings(new ViewModel());
 
   //Initializing InfoWindow
-  console.log('hello');
+  // console.log('hello');
   viewInfoWindow = new google.maps.InfoWindow();
   initMarker();
 };
@@ -304,6 +304,7 @@ function initMarker() {
     //Event handler function listening for marker clicks and opens up InfoWindow
     marker.addListener('click', function() {
       initInfoWindow(this, viewInfoWindow);
+      bounceMarker(this);
     });
     markers.push(marker);
     location.marker = marker;
@@ -316,7 +317,12 @@ function initMarker() {
   map.fitBounds(bounds);
 };
 
-
+function bounceMarker(marker) {
+  marker.setAnimation(google.maps.Animation.BOUNCE);
+  setTimeout(function() {
+    marker.setAnimation(google.maps.Animation.null);
+  }, 2000);
+};
 
 
 //Function which creates the InfoWindow and its contents
@@ -341,7 +347,7 @@ function initInfoWindow(marker, infowindow) {
       success: function (data) {
         var address = data.response.venues[0].location.address;
         var city = data.response.venues[0].location.city;
-        infowindow.setContent('<div><h2>'+ marker.title +'</h2><br><span class="infoDetails">Address:</span> '+ address+'<br><span class="infoDetails">City:</span> '+city+'</div>');
+        infowindow.setContent('<div><h2>'+ marker.title +'</h2><br><span class="infoDetails">Address:</span> '+ address+'<br><span class="infoDetails">City:</span> '+city+'</div><br><span class="infoDetails">Powered by Foursquare API</span>');
         infowindow.open(map, marker);
       },
       //Error handler for ajax method
